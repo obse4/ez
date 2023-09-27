@@ -6,15 +6,15 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-func InitRedis(database *RedisConfig) (pool *redis.Pool) {
-	pool = &redis.Pool{
+func InitRedisPool(database *RedisConfig) {
+	database.Pool = &redis.Pool{
 		MaxIdle:   0,
-		MaxActive: 2000,
+		MaxActive: 5000,
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", fmt.Sprintf("%s:%d", database.Url, database.Port), redis.DialPassword(database.Password))
+			c, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", database.Url, database.Port), redis.DialPassword(database.Password))
 
 			if err != nil {
-				LogError("Redis", "error is %s", err.Error)
+				LogError("Redis", "error is %+v", err)
 				return nil, err
 			}
 			return c, nil
@@ -22,7 +22,7 @@ func InitRedis(database *RedisConfig) (pool *redis.Pool) {
 	}
 	// 检查连接
 
-	pong, err := redis.String(pool.Get().Do("PING"))
+	pong, err := redis.String(database.Pool.Get().Do("PING"))
 
 	if err != nil {
 		LogFatal("Redis", "%s 连接错误:%s", database.Name, err.Error())
@@ -33,8 +33,6 @@ func InitRedis(database *RedisConfig) (pool *redis.Pool) {
 	} else {
 		LogFatal("Redis", "%s 连接失败", database.Name)
 	}
-
-	return
 }
 
 func GetRedisConn(pool *redis.Pool, db int) redis.Conn {
@@ -44,8 +42,9 @@ func GetRedisConn(pool *redis.Pool, db int) redis.Conn {
 }
 
 type RedisConfig struct {
-	Name     string // 自定义名称
-	Url      string // url连接
-	Port     int    // 端口
-	Password string // 密码
+	Name     string      // 自定义名称
+	Url      string      // url连接
+	Port     string      // 端口
+	Password string      // 密码
+	Pool     *redis.Pool // redis连接池
 }

@@ -1,0 +1,18 @@
+httpServer:
+  port: ":9000"
+  mode: "debug"
+mysqlDb:
+  name: "mysql数据库"
+  username: "root"
+  password: "root"
+  database: "test"
+  url: "127.0.0.1"
+  port: "3306"
+redisDb:
+  name: "redis数据库"
+  url: "127.0.0.1"
+  port: "6379"
+  password:
+jwt:
+  expiresTime: 3600
+  secretKey: "ez"

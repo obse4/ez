@@ -1,0 +1,178 @@
+definitions:
+  request.UserAdminCreateRequest:
+    properties:
+      password:
+        description: 用户密码
+        type: string
+      user_type:
+        description: 用户类型 1-admin，2-user
+        type: integer
+      username:
+        description: 用户账户
+        type: string
+    type: object
+  request.UserAdminEditRequest:
+    properties:
+      id:
+        description: 用户id
+        type: integer
+      password:
+        description: 用户密码
+        type: string
+      user_type:
+        description: 用户类型 1-admin，2-user
+        type: integer
+      username:
+        description: 用户账户
+        type: string
+    type: object
+  request.UserAdminFindPagingRequest:
+    properties:
+      page_index:
+        description: 分页索引
+        type: integer
+      page_size:
+        description: 分页大小
+        type: integer
+      user_type:
+        description: 用户类型 1-admin，2-user
+        type: integer
+      username:
+        description: 用户账户
+        type: string
+    type: object
+  request.UserAdminRemoveRequest:
+    properties:
+      id:
+        description: 用户id
+        type: integer
+    type: object
+  response.CommonResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data: {}
+      message:
+        example: ok
+        type: string
+    type: object
+  response.UserAdminFindPagingResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/response.UserAdminFindPagingResponseData'
+        type: array
+      total:
+        type: integer
+    type: object
+  response.UserAdminFindPagingResponseData:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+      user_type:
+        type: integer
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/user/create:
+    post:
+      consumes:
+      - application/json
+      description: 创建用户
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CommonResponse'
+      summary: 创建用户
+      tags:
+      - ADMIN User
+  /admin/user/edit:
+    post:
+      consumes:
+      - application/json
+      description: 更新用户
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminEditRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CommonResponse'
+      summary: 更新用户
+      tags:
+      - ADMIN User
+  /admin/user/find/paging:
+    post:
+      consumes:
+      - application/json
+      description: 查询用户
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminFindPagingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.CommonResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.UserAdminFindPagingResponse'
+              type: object
+      summary: 查询用户
+      tags:
+      - ADMIN User
+  /admin/user/remove:
+    post:
+      consumes:
+      - application/json
+      description: 删除用户
+      parameters:
+      - description: 请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAdminRemoveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.CommonResponse'
+      summary: 删除用户
+      tags:
+      - ADMIN User
+swagger: "2.0"

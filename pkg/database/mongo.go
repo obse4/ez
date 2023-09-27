@@ -129,7 +129,7 @@ func GetMongoCollection(db *mongo.Database, v interface{}) *mongo.Collection {
 }
 
 // 初始化数据库
-func InitMongoDBConnect(mongoose *MongoConfig) (db *mongo.Database) {
+func InitMongoDBConnect(mongoose *MongoConfig) {
 	var url string
 	if mongoose.Username != "" {
 		url = fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", mongoose.Username, mongoose.Password, mongoose.Url, mongoose.Port, mongoose.Database)
@@ -155,16 +155,16 @@ func InitMongoDBConnect(mongoose *MongoConfig) (db *mongo.Database) {
 		LogFatal("Mongo", "%s %s", mongoose.Name, err.Error())
 	}
 
-	db = client.Database(mongoose.Database)
+	mongoose.Db = client.Database(mongoose.Database)
 	LogInfo("Mongo", "%s 连接成功", mongoose.Name)
-	return
 }
 
 type MongoConfig struct {
-	Name     string // 自定义名称
-	Username string // 用户名
-	Password string // 密码
-	Url      string // url链接
-	Port     string // 端口
-	Database string // 数据库名称
+	Name     string          // 自定义名称
+	Username string          // 用户名
+	Password string          // 密码
+	Url      string          // url链接
+	Port     string          // 端口
+	Database string          // 数据库名称
+	Db       *mongo.Database // 数据库指针
 }
